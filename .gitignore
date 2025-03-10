@@ -12,6 +12,9 @@ target/
 *.iml
 *.ipr
 
+### 我加的
+.idea/*
+
 ### Eclipse ###
 .apt_generated
 .classpath
