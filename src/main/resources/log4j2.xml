@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <!--Appenders 元素包含所有的日志输出方式-->
+        <!--这是一个将日志输出到控制台的，Appender target="SYSTEM_OUT"：表示日志输出目标是标准输出（System.out）。 -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <!--PatternLayout：指定日志输出的格式。pattern 属性定义了日志的输出模式：-->
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+    </Appenders>
+    <!--Loggers 元素包含所有的日志记录器-->
+    <Loggers>
+        <!--这是一个根日志记录器，设定根日志记录器的日志级别为 DEBUG。所有高于或等于 DEBUG 级别的日志都会被记录。-->
+        <Root level="debug">
+            <!--关联先前定义的 Console Appender，将日志输出到控制台。-->
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>
