@@ -8,7 +8,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicStampedReference;
 import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.LockSupport;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -160,8 +164,8 @@ class ProcessExample {
     public static void main(String[] args) throws Exception {
         String userHome = System.getProperty("user.home");
         System.out.println("User Home Directory: " + userHome);
-        Optional<String> optional = Optional.of("Hello, World!");
-        Optional<String> userHome1 = Optional.ofNullable(userHome);
+        Optional<String> optional = Optional.of("null");
+        Optional<String> userHome1 = Optional.ofNullable("null");
         userHome1.ifPresent(
                 value -> System.out.println("value = " + value)
         );
@@ -275,10 +279,108 @@ class ReflectExample {
         System.out.println("o = " + o);
 
         ForkJoinPool forkJoinPool = ForkJoinPool.commonPool();
+
+
+        ReentrantLock reentrantLock = new ReentrantLock();
     }
 }
 
+class CustomLock {
+    private volatile Thread owner = null;
+    private Thread waitingThread = null;
 
+    public void lock() {
+        while (!tryLock()) {
+            waitingThread = Thread.currentThread(); // 记录等待线程
+            LockSupport.park(); // 阻塞当前线程
+        }
+    }
 
+    public void unlock() {
+        owner = null; // 释放锁
+        if (waitingThread != null) {
+            LockSupport.unpark(waitingThread); // 唤醒等待线程
+            waitingThread = null; // 清空等待线程
+        }
+    }
 
+    private boolean tryLock() {
+        if (owner == null) {
+            owner = Thread.currentThread();
+            return true;
+        }
+        return false;
+    }
+
+    public static void main(String[] args) {
+        CustomLock lock = new CustomLock();
+
+        Thread thread1 = new Thread(() -> {
+            lock.lock();
+            System.out.println("Thread 1 acquired the lock");
+            try {
+                Thread.sleep(2000); // 模拟任务执行
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                lock.unlock();
+                System.out.println("Thread 1 released the lock");
+            }
+        });
+
+        Thread thread2 = new Thread(() -> {
+            lock.lock();
+            System.out.println("Thread 2 acquired the lock");
+            try {
+                Thread.sleep(1000); // 模拟任务执行
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                lock.unlock();
+                System.out.println("Thread 2 released the lock");
+            }
+        });
+        thread2.interrupt();
+
+        thread1.start();
+        thread2.start();
+
+        AtomicInteger atomicInteger = new AtomicInteger(5);
+        atomicInteger.incrementAndGet();
+        AtomicStampedReference<String> stringAtomicStampedReference = new AtomicStampedReference<String>("sssss", 10);
+        String reference = stringAtomicStampedReference.getReference();
+        System.out.println("reference = " + reference);
+    }
+}
+
+class LockSupportPermitExample {
+    public static void main(String[] args) throws InterruptedException {
+        Object lock = new Object();
+        Thread thread = new Thread(() -> {
+            System.out.println("Thread is parking");
+            synchronized (lock) {
+                if (Thread.currentThread().isInterrupted()) {
+                    System.out.println("Thread was interrupted before wait()");
+                }
+                try {
+                    lock.wait();
+                } catch (InterruptedException e) {
+                    System.out.println("哈哈");
+                    Thread.currentThread().interrupt(); // 重新设置标志位
+                    System.out.println("Thread was interrupted: " + e.getMessage());
+                }
+            }
+            System.out.println("Thread is unparked");
+        });
+        synchronized (lock) {
+            thread.start();
+            thread.interrupt();
+        }
+
+        thread.join();
+
+        boolean interrupted = thread.isInterrupted();
+        System.out.println("interrupted = " + interrupted);
+    }
+}
 

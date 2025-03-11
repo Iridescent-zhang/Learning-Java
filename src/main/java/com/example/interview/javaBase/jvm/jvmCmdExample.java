@@ -1,4 +1,4 @@
-package com.example.interview.jvm;
+package com.example.interview.javaBase.jvm;
 
 /**
  * Created with IntelliJ IDEA.
@@ -43,12 +43,6 @@ import java.util.List;
  * # 查看系统的总体性能指标
  * jcmd 4940 VM.system_properties
  *
- * Jmap是JDK自带的 key 堆分析工具Java Memory Map，可以通过此工具打印出某个Java进程内存内的所有对象大小和数量；
- * 建议在测试环境中使用jmap -histo:live命令查询，执行此命令会触发一次Full GC
- * jmap -histo:live 20881 | grep QueryPartnerImpl
- * 1354:             2             80  com.meituan.trip.mobile.hermes.sal.meilv.impl.QueryPartnerImpl
- *
- * 配合 Jhat是JDK自带的堆分析工具Java Heap Analyse Tool，可以将堆中的对象以HTML的形式显示出来，包括对象的数量、大小等，默认端口7000。
  * ------------------------------------
  *
  * -XX:ThreadStackSize 或简写 -Xss 用于设置每个 Java 线程的栈大小。这个参数定义了线程栈的内存空间，根据你的实际情况来调整这个值。
@@ -98,6 +92,47 @@ import java.util.List;
  * CGC (Number of concurrent GC events): 并发 GC 发生的次数。
  * CGCT (Concurrent garbage collection time): 并发 GC 消耗的时间（单位为秒）。
  * GCT (Total garbage collection time): GC 总消耗时间（单位为秒）。
+ *
+ * ---------------------
+ *
+ * key Jmap 是 JDK 自带的堆分析工具 Java Memory Map，可以通过此工具打印出某个 Java 进程内存内的所有对象大小和数量；
+ * 建议在测试环境中使用 jmap -histo:live 命令查询，执行此命令会触发一次Full GC
+ * jmap -histo:live 20881 | grep QueryPartnerImpl
+ * 1354:             2             80  com.meituan.trip.mobile.hermes.sal.meilv.impl.QueryPartnerImpl
+ *
+ * 配合 Jhat 是JDK自带的堆分析工具Java Heap Analyse Tool，可以将堆中的对象以HTML的形式显示出来，包括对象的数量、大小等，默认端口7000。
+ *
+ * 笔者在项目中添加 -XX:NativeMemoryTracking=detail   JVM参数重启项目，使用命令jcmd pid VM.native_memory detail查看到的内存分布如下：
+ *
+ *
+ *
+ * -------------------
+ *
+ * 内存泄漏通常是由于某些对象无法被垃圾回收，导致堆内存不断增长。通过分析堆内存（Heap Dump），可以找到内存泄漏的根源。
+ * 生成堆内存快照：
+ *      jmap -dump:live,format=b,file=heap_dump.hprof <pid>
+ *      live 存活对象   format是二进制
+ * 主要关注的信息：
+ * Histogram 直方图：查看哪些类的实例数量异常多。
+ * Dominator Tree：查看哪些对象占用了最多的内存。
+ * 引用链（Reference Chain）：查看这些对象是如何被引用的，找到无法被回收的原因。
+ * GC Roots：查看对象的根引用链，找出哪些对象无法被回收。
+ *
+ * 假设发现 com.example.MyClass 的实例数量异常多，可以通过以下步骤分析：
+ * 在 Eclipse MAT 中打开 heapdump.hprof。
+ * 查看 Histogram，找到 com.example.MyClass。
+ * 查看 Dominator Tree，找出这个类的哪些 MyClass 实例占用了大量内存。
+ * 查看 引用链，找出这些实例的根引用链，确定为什么无法被回收。
+ */
+
+/**
+ * GC
+ * 在 JDK 17 中，默认的垃圾收集器是 G1（Garbage-First）。G1 是一种面向低延迟的垃圾收集器，适合大内存和多核 CPU 的场景。
+ * java -XX:+UseG1GC -jar your-application.jar     -XX:+UseG1GC：显式启用 G1 垃圾收集器。
+ *  G1 的其他常用参数
+ * -XX:MaxGCPauseMillis=200：设置最大 GC 停顿时间（默认 200ms）。【最大 GC 暂停时间】
+ * -XX:G1HeapRegionSize=32m：设置 G1 的堆区域大小。            【应该是 G1 堆进行分区的大小】
+ * -XX:InitiatingHeapOccupancyPercent=45：设置触发并发 GC 的堆占用百分比。       【初始化堆占用百分比：应该是到达这个百分比之后会进行并发 GC】
  */
 public class jvmCmdExample {
     public static void main(String[] args) {
