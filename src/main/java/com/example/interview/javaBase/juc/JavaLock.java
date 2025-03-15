@@ -96,7 +96,11 @@ public class JavaLock {
         Class<JavaLock> javaLockClass = JavaLock.class;
         Field field = javaLockClass.getDeclaredField("test");
         field.setAccessible(true);
-        Integer o = (Integer)field.get(JavaLock.class);
+        /**
+         * 对于非静态字段，field.get 需要传入一个对象实例，因为字段属于对象。
+         * 对于静态字段，field.get 需要传入 null，因为字段属于类而不是对象。
+         */
+        Integer o = (Integer)field.get(null);
         System.out.println("o = " + o);
     }
 }

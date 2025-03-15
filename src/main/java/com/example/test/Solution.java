@@ -87,7 +87,6 @@ class Solution {
         runnable runnable = new runnable();
 
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-
         return ans+max;
     }
 

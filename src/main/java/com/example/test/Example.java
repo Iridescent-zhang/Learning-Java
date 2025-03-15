@@ -20,6 +20,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Scanner;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -57,37 +58,18 @@ interface B{
 
 class Main {
     public static void main(String[] args) {
-        BlockingQueue<Integer> queue = new ArrayBlockingQueue<>(10);
-
-        // Producer
-        Thread producer = new Thread(() -> {
-            try {
-                int value = 0;
-                while (!Thread.currentThread().isInterrupted()) {
-                    queue.offer(value);
-                    System.out.println("Produced " + value++);
-                    Thread.sleep(100);
-                }
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                e.printStackTrace();
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        sc.nextLine();
+        int[][] nums = new int[n][n];
+        for(int i=0; i<n; i++) {
+            String str = sc.nextLine();
+            for(int j=0; j<n; j++){
+                nums[i][j] = str.charAt(j)=='0'? 0 : 1;
             }
-        });
-
-        // Consumer
-        Thread consumer = new Thread(() -> {
-            try {
-                while (!Thread.currentThread().isInterrupted()) {
-                    Integer value = queue.poll();
-                    System.out.println("Consumed " + value);
-                    Thread.sleep(500);
-                }
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        });
-
-        producer.start();
-        consumer.start();
+        }
+        for(int i=0; i<n; i++) {
+            System.out.println(i);
+        }
     }
 }
