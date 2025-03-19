@@ -91,10 +91,10 @@ package com.example.interview;
  * SpringBoot
  * Spring Boot 启动过程主要分为以下几个阶段：
  * 1、启动引导：通过 SpringApplication.run() 方法启动应用程序。内部调用了多个步骤，包括设置环境变量、加载应用程序上下文等。
- * 准备环境：创建并配置 Environment，以便将应用程序属性加载到上下文中，包括命令行参数、系统属性、环境变量等。
- * 创建并准备上下文：创建 ApplicationContext 实例，并初始化 ApplicationContext，这是应用程序的主框架。
- * 上下文刷新：刷新 ApplicationContext，加载所有的 Bean 定义并完成加载过程。这个步骤很关键，它会触发各种 Bean 的生命周期回调方法。
- * 调用启动器和监听器：调用 ApplicationRunner 和 CommandLineRunner，完成任何附加的初始化逻辑。
+ * 2、准备环境：创建并配置 Environment，以便将应用程序属性加载到上下文中，包括命令行参数、系统属性、环境变量等。
+ * 3、创建并准备上下文：创建 ApplicationContext 实例，并初始化 ApplicationContext，这是应用程序的主框架。【和 2 一块说】
+ * 4、上下文刷新：刷新 ApplicationContext，加载所有的 Bean 定义并完成加载过程。这个步骤很关键，它会触发各种 Bean 的生命周期回调方法。
+ * 5、调用启动器和监听器：调用 ApplicationRunner 和 CommandLineRunner，完成任何附加的初始化逻辑。
  */
 
 /**
@@ -108,7 +108,7 @@ package com.example.interview;
  * Bean 初始化：代理对象会替代原始的 Bean 继续进行初始化。
  * 方法拦截：在方法调用的时候，代理对象会拦截方法的执行，并按切面定义的顺序执行相应的横切逻辑（如 @Before、@After 等）。
  *
- * AOP 在 Spring 启动过程中，主要是在 ApplicationContext 刷新和 Bean 初始化的过程中实现的。
+ * 所以 AOP 在 Spring 启动过程中，主要是在 ApplicationContext 刷新和 Bean 初始化的过程中实现的。
  */
 
 /**
@@ -123,9 +123,9 @@ package com.example.interview;
 /**
  * bean 加载是有先后的，假如代码 A 写在 B 前面。
  * 当A完成了实例化并添加进了三级缓存后，就要开始为A进行属性注入了，在注入时发现A依赖了B，那么这个时候Spring又会去getBean(b)，
- * 希望拿到之后反射调用setter方法完成属性注入。
+ * 希望拿到之后反射调用setter方法完成属性注入。【原来反射用在这了】
  * 但是此时三个缓存里面都是没有 b的，所以getBean(b)会走一遍跟 getBean(a) 一模一样的流程(一开始都是得先创建才能放进缓存嘛，所以此时缓存里都没有)
- * 区别在于，B放进了三级缓存之后进行属性注入，发现依赖A，于是去getBean(a)【getBean(a)有重载，先判断缓存中有没有，没有的化会去创建然后放缓存】，
+ * 区别在于，B放进了三级缓存之后进行属性注入，发现依赖A，于是去getBean(a)【getBean(a)有重载，先判断缓存中有没有，没有的话会去创建然后放缓存】，
  * 结果发现缓存里面是有 A 的，那B就能依赖注入成功了，然后初始化，最后放入一级缓存单例池。
  * 也就是 A 先加载，结果先给 B 加载成功了。
  *
@@ -201,7 +201,7 @@ package com.example.interview;
  *
  * key 与此同时，我们应该知道，Spring在创建Bean的过程中分为三步
  * 实例化，简单理解就是new了一个对象
- * 属性注入，为实例化中new出来的对象填充属性
+ * 依赖注入，为实例化中new出来的对象填充属性
  * 初始化，执行aware接口中的方法，初始化方法，完成AOP代理
  *
  * Aware 接口：Spring 提供了一组Aware接口，这些接口用来使 Bean 获取到 Spring 容器的一些特定资源。例如：
@@ -216,6 +216,7 @@ package com.example.interview;
  * @PostConstruct 注解：在@PostConstruct注解的方法将在 Bean 初始化完成（即依赖注入完成）后调用。
  * 实现 InitializingBean 接口：通过实现 afterPropertiesSet 方法来定义初始化逻辑。
  * @Bean 配置中的 init-method 属性：在 @Bean 配置中可以通过 init-method 属性指定初始化方法。
+ * DisposableBean 接口，或 @Bean 配置中的 destroy-method
  *
  * AOP 代理
  * AOP 代理的创建通常在各种 Aware 接口方法调用以及 Bean 初始化之后进行。

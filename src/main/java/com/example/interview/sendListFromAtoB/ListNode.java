@@ -15,7 +15,7 @@ package com.example.interview.sendListFromAtoB;
  */
 import java.io.Serializable;
 
-class ListNode implements Serializable {
+class ListNode implements Serializable, Cloneable {
     private static final long serialVersionUID = 1L;
 
     int value;
@@ -25,4 +25,5 @@ class ListNode implements Serializable {
         this.value = value;
         this.next = null;
     }
+
 }

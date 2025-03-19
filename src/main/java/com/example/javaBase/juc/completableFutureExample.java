@@ -66,13 +66,13 @@ public class completableFutureExample {
  *      首先发起两个异步调用CF1、CF2，主要有三种方式：
  * 2、一元依赖：依赖一个CF
  *      CF3，CF5分别依赖于CF1和CF2，这种对于单个 CompletableFuture 的依赖可以通过 thenApply、thenAccept、thenCompose 等方法来实现
- *      thenApply、thenCompose 传入一个 Function<T, R> {R apply(T t)} 它是最牛的，可以接上一个 Stage 的结果，然后自己执行出一个结果
+ *      thenApply、thenCompose 传入一个 Function<T, R> {R apply(T t)} 它可以接上一个 Stage 的运行结果，然后自己执行出一个结果
  *      thenAccept 接一个 Comsumer {void accept(T t)} 只消耗不产出
  * 3、二元依赖：依赖两个CF
  *      CF4同时依赖于两个CF1和CF2，这种二元依赖可以通过 thenCombine 等回调来实现
  *      thenCombine 接收一个 BiFunction{R apply(T t, U u);}
  * 4、多元依赖：依赖多个CF
- *      整个流程的结束依赖于三个步骤CF3、CF4、CF5，这种多元依赖可以通过allOf或anyOf方法来实现，区别是当需要多个依赖全部完成时使用allOf，当多个依赖中的任意一个完成即可时使用anyOf
+ *      整个流程的结束依赖于三个步骤CF3、CF4、CF5，这种多元依赖可以通过 allOf 或 anyOf 方法来实现，区别是当需要多个依赖全部完成时使用allOf，当多个依赖中的任意一个完成即可时使用anyOf
  *
  * key CompletableFuture原理
  * CompletableFuture中包含两个字段：result和stack。result用于存储当前CF的结果，stack（Completion）表示当前CF完成后需要触发的依赖动作（Dependency Actions），去触发依赖它的CF的计算，
@@ -106,7 +106,7 @@ public class completableFutureExample {
 class completableFuturePrinciple {
     public static void main(String[] args) {
         ExecutorService executor = Executors.newFixedThreadPool(5);
-        // 1、使用 runAsync 或 supplyAsync 发起异步调用传入一个 Supplier，注意 Supplier<T> {T get()} 是有返回值无参数的，同 Callable<T> {V call() throws Exception} 只不过后者还能返回异常
+        // 1、key 使用 runAsync 或 supplyAsync 发起异步调用传入一个 Supplier，注意 Supplier<T> {T get()} 是有返回值无参数的，同 Callable<T> {V call() throws Exception} 只不过后者还能返回异常
         CompletableFuture<String> cf1 = CompletableFuture.supplyAsync(() -> {
             return "result1";
         }, executor);
