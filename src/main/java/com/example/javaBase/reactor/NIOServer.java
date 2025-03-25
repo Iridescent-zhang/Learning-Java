@@ -1,4 +1,4 @@
-package com.example.interview;
+package com.example.javaBase.reactor;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,7 +13,9 @@ package com.example.interview;
  * @Website : https://iridescent-zhang.github.io
  * @Description :
  */
+import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
@@ -28,6 +30,8 @@ import java.util.Set;
  * ET 模式只会在状态从未就绪变为就绪时通知一次。如果你没有处理完该事件，事件通知系统不会再次通知你，需要你进行额外的处理以确保不会丢失事件。
  *
  * 使用ET模式，你应该怎么处理网络事件？
+ *
+ * 这个例子：key  其实Java的 NIO 模式的Selector网络通讯，其实就是一个简单的Reactor模型。可以说是Reactor模型的朴素原型。
  */
 public class NIOServer {
     public static void main(String[] args) throws IOException {
@@ -70,7 +74,7 @@ public class NIOServer {
                     ServerSocketChannel serverChannel = (ServerSocketChannel) key.channel();
                     SocketChannel clientChannel = serverChannel.accept();
                     clientChannel.configureBlocking(false);
-                    // 注册读操作，以边缘触发模式
+                    // 注册读和写操作，以边缘触发模式
                     clientChannel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
                 } else if (key.isReadable()) {
                     // 处理读操作
@@ -79,7 +83,7 @@ public class NIOServer {
                     /**
                      * TODO 当使用 ET 模式时，需要特别小心处理，因为错过了就绪事件后可能导致挂起或者其它错误。通常我们会在循环中 【注意是这个 while (true)】 一直读取或者写入，直到所有数据处理完毕。
                      * TODO 在 ET 模式下，当通道变为可读（或可写）时，因为 Selector 只会通知一次，加上可能 clientChannel.read(buffer) 不能读完所有消息内容，并且必须在这次消息通知内处理完所有数据。
-                     * 所以就加上 while(true) ，这就是 while(true) 循环的目的。即：单次通知不能完美预测有多少数据，需循环读取直到 read 返回 0 或 -1
+                     * 所以就加上 while(true) ，这就是 while(true) 循环的目的。即：单次通知不能完美预测传来了多少数据，需循环读取直到 read 返回 0 或 -1
                      *
                      * 通过这个 while 保证对每个 ready 的 key 处理完 I/O 操作，通过循环读取整个 buffer 确保数据被完全处理
                      */

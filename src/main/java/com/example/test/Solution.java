@@ -1,29 +1,11 @@
 package com.example.test;
 
-import com.example.interview.sendListFromAtoB.tryAgain.ListNode;
-
 import java.io.*;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.net.Socket;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.Map.*;
-import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.atomic.AtomicStampedReference;
 import java.util.concurrent.atomic.LongAdder;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.LockSupport;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created with IntelliJ IDEA.
@@ -39,40 +21,56 @@ import java.util.concurrent.locks.ReentrantLock;
  * @Description :
  */
 class Solution {
+    final int a = 5;
+    static  long[][] arr;
     public static void main(String[] args) throws IOException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
-        int[] nums = new int[]{-2,1,-3,4,-1,2,1,-5,4};
-        int ans = nums[0];
-        int left = 0, right = 0;
-        int sum = nums[0];
-        int leftTmp = 0, rightTmp = 0;
-        for(int i=1; i<nums.length; i++) {
-            if(sum<0) {
-                sum = 0;
-                leftTmp = i;
-            }
-            sum += nums[i];
-            rightTmp = i;
-            if(sum > ans) {
-                left = leftTmp;
-                right = rightTmp;
-                ans = sum;
+//        int intValue = 42;
+//        long longValue = 12345675589L;
+//        float floatValue = 3.14159f;
+//        double doubleValue = 2.71828;
+//        char charValue = 'A';
+//        String stringValue = "Hello, World!";
+//
+//        // 格式化输出
+//        System.out.printf("intValue: %d\n", intValue);
+//        System.out.printf("longValue: %d\n", longValue);
+//        System.out.printf("floatValue: %.2f\n", floatValue); // 保留两位小数
+//        System.out.printf("doubleValue: %.3f\n", doubleValue); // 保留三位小数
+//        System.out.printf("charValue: %c\n", charValue);
+//        System.out.printf("stringValue: %s\n", stringValue);
+
+//        // 复合格式
+//        System.out.printf("Formatted output: intValue=%d, floatValue=%.2f, stringValue=%s\n",
+//                intValue, floatValue, stringValue);
+
+        arr = new long[1024 * 1024][];
+        for (int i = 0; i < 1024 * 1024; i++) {
+            arr[i] = new long[8];
+            for (int j = 0; j < 8; j++) {
+                arr[i][j] = 0L;
             }
         }
-        System.out.println("ans = " + ans);
-        ArrayList<Integer> list = new ArrayList<>();
-        for(int i=left; i<right+1; i++) {
-            list.add(nums[i]);
+        long sum = 0L;
+        long marked = System.currentTimeMillis();
+        for (int i = 0; i < 1024 * 1024; i+=1) {
+            for(int j =0; j< 8;j++){
+                sum = arr[i][j];
+            }
         }
-        System.out.println("list = " + list);
+        System.out.println("Loop times:" + (System.currentTimeMillis() - marked) + "ms");
 
-        Socket socket = new Socket("", 5555);
+        marked = System.currentTimeMillis();
+        for (int i = 0; i < 8; i+=1) {
+            for(int j =0; j< 1024 * 1024;j++){
+                sum = arr[j][i];
+            }
+        }
+        System.out.println("Loop times:" + (System.currentTimeMillis() - marked) + "ms");
+        Thread.yield();
+        LongAdder longAdder = new LongAdder();
 
-        File file = new File("");
-        RandomAccessFile raf = new RandomAccessFile(file, "rw");
-        FileChannel fc = raf.getChannel();
-        ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[10]);
-        fc.position(0);
-        fc.write(byteBuffer);
+        Socket socket = new Socket("", 123);
+        socket.getInputStream().read();
+
     }
 }
-
