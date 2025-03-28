@@ -18,9 +18,9 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
 public class NIODirectBufferExample {
-    // TODO NIO 库的一个重要特性之一就是对直接内存（直接缓冲区）的支持，即 ByteBuffer 的 allocateDirect 方法。
+    // TODO NIOExample 库的一个重要特性之一就是对直接内存（直接缓冲区）的支持，即 ByteBuffer 的 allocateDirect 方法。
     /**
-     * NIO 确实包括非阻塞 I/O（如 SelectableChannel 和 Selector），但它的核心内容还包括缓冲区（Buffer），通道（Channel）和选择器（Selector）。在这里，我们主要关注的是缓冲区和通道，它们可以用于高效地处理 I/O 操作。
+     * NIOExample 确实包括非阻塞 I/O（如 SelectableChannel 和 Selector），但它的核心内容还包括缓冲区（BufferExample），通道（Channel）和选择器（Selector）。在这里，我们主要关注的是缓冲区和通道，它们可以用于高效地处理 I/O 操作。
      * ByteBuffer 的 allocateDirect 方法用于分配一个直接字节缓冲区，它将内存分配在 JVM 堆外，减少数据拷贝操作，并且可以更高效地利用操作系统的 I/O 机制。
      */
 

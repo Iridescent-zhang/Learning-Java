@@ -1,9 +1,15 @@
 package com.example.test;
 
+import io.netty.channel.nio.NioEventLoop;
+
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.channels.SelectableChannel;
 import java.util.*;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.LongAdder;
 
@@ -24,53 +30,19 @@ class Solution {
     final int a = 5;
     static  long[][] arr;
     public static void main(String[] args) throws IOException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
-//        int intValue = 42;
-//        long longValue = 12345675589L;
-//        float floatValue = 3.14159f;
-//        double doubleValue = 2.71828;
-//        char charValue = 'A';
-//        String stringValue = "Hello, World!";
-//
-//        // 格式化输出
-//        System.out.printf("intValue: %d\n", intValue);
-//        System.out.printf("longValue: %d\n", longValue);
-//        System.out.printf("floatValue: %.2f\n", floatValue); // 保留两位小数
-//        System.out.printf("doubleValue: %.3f\n", doubleValue); // 保留三位小数
-//        System.out.printf("charValue: %c\n", charValue);
-//        System.out.printf("stringValue: %s\n", stringValue);
+        int cores = Runtime.getRuntime().availableProcessors();
+        System.out.println("cores = " + cores);
+        int activeThreadCount = ForkJoinPool.commonPool().getActiveThreadCount();
+        System.out.println("activeThreadCount = " + activeThreadCount);
+        int poolSize = ForkJoinPool.commonPool().getPoolSize();
+        System.out.println("poolSize = " + poolSize);
+        int parallelism = ForkJoinPool.commonPool().getParallelism();
+        System.out.println("parallelism = " + parallelism);
 
-//        // 复合格式
-//        System.out.printf("Formatted output: intValue=%d, floatValue=%.2f, stringValue=%s\n",
-//                intValue, floatValue, stringValue);
-
-        arr = new long[1024 * 1024][];
-        for (int i = 0; i < 1024 * 1024; i++) {
-            arr[i] = new long[8];
-            for (int j = 0; j < 8; j++) {
-                arr[i][j] = 0L;
-            }
-        }
-        long sum = 0L;
-        long marked = System.currentTimeMillis();
-        for (int i = 0; i < 1024 * 1024; i+=1) {
-            for(int j =0; j< 8;j++){
-                sum = arr[i][j];
-            }
-        }
-        System.out.println("Loop times:" + (System.currentTimeMillis() - marked) + "ms");
-
-        marked = System.currentTimeMillis();
-        for (int i = 0; i < 8; i+=1) {
-            for(int j =0; j< 1024 * 1024;j++){
-                sum = arr[j][i];
-            }
-        }
-        System.out.println("Loop times:" + (System.currentTimeMillis() - marked) + "ms");
-        Thread.yield();
-        LongAdder longAdder = new LongAdder();
-
-        Socket socket = new Socket("", 123);
-        socket.getInputStream().read();
-
+        ByteBuffer allocate = ByteBuffer.allocate(100);
+        File file = new File("");
+        RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
+        FileChannel channel = randomAccessFile.getChannel();
+        channel.read(allocate);
     }
 }

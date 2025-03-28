@@ -59,12 +59,12 @@ import java.util.concurrent.ThreadPoolExecutor;
  * 多个生产者
  * 多个生产者的情况下，会遇到“如何防止多个线程重复写同一个元素”的问题。Disruptor的解决方法是，key  每个线程获取不同的一段数组空间进行操作。这个通过CAS很容易达到。只需要在分配元素的时候，通过CAS判断一下这段空间是否已经分配出去即可。
  * 但是会遇到一个新问题：如何防止读取的时候，读到还未写的元素。
- * Disruptor在多个生产者的情况下，引入了一个与Ring Buffer大小相同的buffer：available Buffer。当某个位置写入成功的时候，便把availble Buffer相应的位置标记为写入成功。读取的时候，会遍历available Buffer，来判断元素是否已经就绪。
+ * Disruptor在多个生产者的情况下，引入了一个与Ring Buffer大小相同的buffer：available BufferExample。当某个位置写入成功的时候，便把availble Buffer相应的位置标记为写入成功。读取的时候，会遍历available BufferExample，来判断元素是否已经就绪。
  *
  * 读数据
  * 生产者多线程写入的情况会复杂很多：
  * 申请读取到序号n；
- * 从reader cursor开始读取available Buffer，一直查到第一个不可用的元素，然后返回最大连续可读元素的位置；
+ * 从reader cursor开始读取available BufferExample，一直查到第一个不可用的元素，然后返回最大连续可读元素的位置；
  * 消费者读取元素。
  * 比如：读线程申请读取到下标从3到11的元素，判断writer cursor>=11。然后开始读取availableBuffer，从3开始，往后读取，发现下标为7的元素没有生产成功，于是WaitFor(11)返回6，然后，消费者读取下标从3到6共计4个元素。
  *
@@ -198,7 +198,7 @@ public class DisruptorExample {
         // key  消费者线程池，事件的处理是在构造的线程池里来进行处理的。
         ExecutorService executor = Executors.newCachedThreadPool();
         EventFactory<LongEvent> factory = new LongEventFactory();
-        int bufferSize = 1024; // 指定 Ring Buffer 大小，一般根据业务指定成2的指数倍。
+        int bufferSize = 1024; // 指定 Ring BufferExample 大小，一般根据业务指定成2的指数倍。
 
         // key  指定等待策略，Disruptor 定义了 com.lmax.disruptor.WaitStrategy 接口用于抽象 Consumer 如何等待Event事件。
 
@@ -211,7 +211,7 @@ public class DisruptorExample {
         // 启动 Disruptor，开启 分裂者（事件分发）
         disruptor.start();
 
-        // 获取 Ring Buffer
+        // 获取 Ring BufferExample
         RingBuffer<LongEvent> ringBuffer = disruptor.getRingBuffer();
 
         LongEventProducer producer = new LongEventProducer(ringBuffer);

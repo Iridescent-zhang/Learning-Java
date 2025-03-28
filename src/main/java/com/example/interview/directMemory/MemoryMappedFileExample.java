@@ -19,7 +19,7 @@ import java.nio.channels.FileChannel;
 
 public class MemoryMappedFileExample {
     public static void main(String[] args) throws Exception {
-        //TODO Java 支持使用直接内存（也称为本地内存、堆外内存），这是通过 NIO（New Input/Output）库实现的。直接内存的优势在于它绕过了 JVM 堆内存，从而减少一次拷贝操作并提高性能。
+        //TODO Java 支持使用直接内存（也称为本地内存、堆外内存），这是通过 NIOExample（New Input/Output）库实现的。直接内存的优势在于它绕过了 JVM 堆内存，从而减少一次拷贝操作并提高性能。
         RandomAccessFile file = new RandomAccessFile("input.txt", "rw");
         FileChannel fileChannel = file.getChannel();
 

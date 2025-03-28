@@ -24,20 +24,20 @@ import java.util.Set;
 
 /**
  * 默认的 Selector 是 LT 模式。
- * 若使用特定的 Selector 实现，比如EPollSelectorProvider（与操作系统 epoll 关联），通过SelectionKey的附加标记可以开启 ET 模式。在 Java NIO 中，直接使用selector.select()等 API 时默认是 LT 模式。
+ * 若使用特定的 Selector 实现，比如EPollSelectorProvider（与操作系统 epoll 关联），通过SelectionKey的附加标记可以开启 ET 模式。在 Java NIOExample 中，直接使用selector.select()等 API 时默认是 LT 模式。
  *
  * LT 模式是绝大多数系统默认为模式，它在某个文件描述符（如套接字）变为 “就绪” 状态时，事件通知系统会不断通知你，直到你处理完成为止。
  * ET 模式只会在状态从未就绪变为就绪时通知一次。如果你没有处理完该事件，事件通知系统不会再次通知你，需要你进行额外的处理以确保不会丢失事件。
  *
  * 使用ET模式，你应该怎么处理网络事件？
  *
- * 这个例子：key  其实Java的 NIO 模式的Selector网络通讯，其实就是一个简单的Reactor模型。可以说是Reactor模型的朴素原型。
+ * 这个例子：key  其实Java的 NIOExample 模式的Selector网络通讯，其实就是一个简单的Reactor模型。可以说是Reactor模型的朴素原型。
  */
 public class NIOServer {
     public static void main(String[] args) throws IOException {
         /**
          * 创建选择器
-         * 在 Java NIO 的 Selector 使用中，ET（Edge Triggered，边缘触发）和 LT（Level Triggered，水平触发）是两种不同的事件通知模式。
+         * 在 Java NIOExample 的 Selector 使用中，ET（Edge Triggered，边缘触发）和 LT（Level Triggered，水平触发）是两种不同的事件通知模式。
          *
          * (LT) 水平触发：
          * 当 Selector 发现通道准备好进行 I/O 操作时，它会通知一个事件。只要条件满足，比如有数据可读，Selector 会不断地通知。所以只要不处理，多次 select 操作会返回同一个事件。

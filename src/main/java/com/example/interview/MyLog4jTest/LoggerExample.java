@@ -1,4 +1,4 @@
-package com.example.MyLog4jTest;
+package com.example.interview.MyLog4jTest;
 
 /**
  * Created with IntelliJ IDEA.
