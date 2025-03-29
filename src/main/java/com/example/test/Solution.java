@@ -44,5 +44,6 @@ class Solution {
         RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
         FileChannel channel = randomAccessFile.getChannel();
         channel.read(allocate);
+        String s;
     }
 }
