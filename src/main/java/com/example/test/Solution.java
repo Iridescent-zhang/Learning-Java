@@ -1,15 +1,17 @@
 package com.example.test;
 
+import com.example.interview.ioStream.ReaderExample;
 import io.netty.channel.nio.NioEventLoop;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SelectableChannel;
 import java.util.*;
-import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.LongAdder;
 
@@ -29,21 +31,19 @@ import java.util.concurrent.atomic.LongAdder;
 class Solution {
     final int a = 5;
     static  long[][] arr;
-    public static void main(String[] args) throws IOException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
-        int cores = Runtime.getRuntime().availableProcessors();
-        System.out.println("cores = " + cores);
-        int activeThreadCount = ForkJoinPool.commonPool().getActiveThreadCount();
-        System.out.println("activeThreadCount = " + activeThreadCount);
-        int poolSize = ForkJoinPool.commonPool().getPoolSize();
-        System.out.println("poolSize = " + poolSize);
-        int parallelism = ForkJoinPool.commonPool().getParallelism();
-        System.out.println("parallelism = " + parallelism);
+    public static void main(String[] args) throws IOException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException, ExecutionException, InterruptedException {
 
-        ByteBuffer allocate = ByteBuffer.allocate(100);
-        File file = new File("");
-        RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
-        FileChannel channel = randomAccessFile.getChannel();
-        channel.read(allocate);
-        String s;
+        String replace = new String(new char[10]).replace("\0", "_");
+        System.out.println("replace = " + replace);
+
+        String str = "|sdhwjk|sdjhwa|";
+        String[] split = str.split("\\|");
+        String s = Arrays.toString(split);
+        System.out.println("s = " + s);
+
+
+        String s1 = str.replaceAll("\\|", "*");
+        System.out.println("s1 = " + s1);
+
     }
 }

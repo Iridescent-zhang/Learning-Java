@@ -20,8 +20,8 @@ import java.util.concurrent.*;
  * 内部存储：CopyOnWriteArrayList key 使用一个 volatile 关键字修饰的数组变量来存储数据：
  * 所有读操作（如 get、size 等）直接操作内存中的当前数组副本。这些操作不需要加锁，因为 volatile 保证了数组引用的可见性。
  * 所有写操作（如 add、set、remove 等）会首先复制当前数组（复制的时候会上锁），修改复制的数组，然后将引用指向新的数组。
- *      CopyOnWriteArrayList 使用 ReentrantLock 来确保只有一个线程可以进行修改操作，从而保证线程安全。
- * private transient volatile Object[] array; 而且底层数组是 volatile 的
+ *      CopyOnWriteArrayList 使用 ReentrantLock 来确保只有一个线程可以进行修改操作，从而保证线程安全。key 【synchronized (lock)】 也就是读写并发解决了，写写并发依然靠锁
+ * private transient volatile Object[] array; 底层数组是 volatile 的
  */
 public class CopyOnWriteArrayListExample {
     private CopyOnWriteArrayList<Integer> list = new CopyOnWriteArrayList<Integer>();

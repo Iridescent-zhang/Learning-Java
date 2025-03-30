@@ -6,6 +6,7 @@ import com.alibaba.ttl.TtlRunnable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicStampedReference;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -33,7 +34,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * 6. 使用 ThreadLocal 变量，提供了线程本地变量，每个线程都有自己独立初始化的变量副本，从而避免了共享变量的竞争问题。
  * 7. 使用信号量（Semaphore）是一种更为复杂的锁机制，keypoint 用于限制访问资源的线程数量。例如，它可以允许最多 N 个线程同时访问某个资源。
  * 8. 使用读写锁（ReadWriteLock）允许多个线程同时读取数据，但在写入时只允许一个线程写入。
- * 9、CAS 是不是也不能忘
+ * 9、CAS 是不是也不能忘  key  CAS（Compare-And-Swap）是一种用于实现无锁并发编程的技术，就说 Atomic 包中的类就好，例如 AtomicInteger, AtomicReference等，它们都有 compareAndSet()
+ *      ABA 问题：CAS操作可能会遇到 ABA 问题，即一个变量在一次操作中值没有改变，但过程中可能经过其他值的变化。这可以通过使用版本号来解决，例如 AtomicStampedReference。
  */
 public class Counter {
     private static AtomicInteger cnt = new AtomicInteger(2);
