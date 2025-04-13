@@ -1,19 +1,10 @@
 package com.example.test;
 
-import com.example.interview.ioStream.ReaderExample;
-import io.netty.channel.nio.NioEventLoop;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.channels.SelectableChannel;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.LongAdder;
 
 /**
  * Created with IntelliJ IDEA.
@@ -44,6 +35,17 @@ class Solution {
 
         String s1 = str.replaceAll("\\|", "*");
         System.out.println("s1 = " + s1);
+
+        List<String> list = new ArrayList<>();
+        list.add("-1");
+        list.add("800");
+//        list.add("ii");
+        Object[] array = list.toArray();
+        String[] array1 = list.toArray(new String[list.size()]);
+        String s2 = Arrays.deepToString(array1);
+        System.out.println("s2 = " + s2);
+
+        System.out.println(null != null);
 
     }
 }
