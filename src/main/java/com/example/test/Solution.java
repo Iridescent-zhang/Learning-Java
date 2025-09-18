@@ -5,6 +5,7 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,33 +20,36 @@ import java.util.concurrent.*;
  * @Website : https://iridescent-zhang.github.io
  * @Description :
  */
-class Solution {
-    final int a = 5;
-    static  long[][] arr;
-    public static void main(String[] args) throws IOException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException, ExecutionException, InterruptedException {
+import java.util.*;
 
-        String replace = new String(new char[10]).replace("\0", "_");
-        System.out.println("replace = " + replace);
-
-        String str = "|sdhwjk|sdjhwa|";
-        String[] split = str.split("\\|");
-        String s = Arrays.toString(split);
-        System.out.println("s = " + s);
-
-
-        String s1 = str.replaceAll("\\|", "*");
-        System.out.println("s1 = " + s1);
-
-        List<String> list = new ArrayList<>();
-        list.add("-1");
-        list.add("800");
-//        list.add("ii");
-        Object[] array = list.toArray();
-        String[] array1 = list.toArray(new String[list.size()]);
-        String s2 = Arrays.deepToString(array1);
-        System.out.println("s2 = " + s2);
-
-        System.out.println(null != null);
-
+public class Solution {
+    /**
+     * Note: 类名、方法名、参数名已经指定，请勿修改
+     *
+     *
+     *
+     * @param param string字符串
+     * @return string字符串
+     */
+    public String longestPalindrome(String param) {
+        // write code here
+        int len = param.length();
+        int max = 0;
+        int left = 0, right = 0;
+        for(int i=0; i<len-1; i++) {
+            for (int j=0; j<2; j++) {
+                int l = i, r = i+j;
+                while(l>=0 && r<len && param.charAt(l)==param.charAt(r)) {
+                    if((r-l+1) > max) {
+                        max = r-l+1;
+                        left = l;
+                        right = r;
+                    }
+                    l--;
+                    r++;
+                }
+            }
+        }
+        return param.substring(left, right+1);
     }
 }
