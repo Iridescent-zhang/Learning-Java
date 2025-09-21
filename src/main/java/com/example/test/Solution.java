@@ -22,34 +22,49 @@ import java.util.stream.Collectors;
  */
 import java.util.*;
 
-public class Solution {
-    /**
-     * Note: 类名、方法名、参数名已经指定，请勿修改
-     *
-     *
-     *
-     * @param param string字符串
-     * @return string字符串
-     */
-    public String longestPalindrome(String param) {
-        // write code here
-        int len = param.length();
-        int max = 0;
-        int left = 0, right = 0;
-        for(int i=0; i<len-1; i++) {
-            for (int j=0; j<2; j++) {
-                int l = i, r = i+j;
-                while(l>=0 && r<len && param.charAt(l)==param.charAt(r)) {
-                    if((r-l+1) > max) {
-                        max = r-l+1;
-                        left = l;
-                        right = r;
-                    }
-                    l--;
-                    r++;
+class Solution {
+    public String decodeString(String s) {
+        int len = s.length();
+        Deque<String> stk = new ArrayDeque<>();
+        Deque<String> tmpStk = new ArrayDeque<>();
+        int i = 0;
+        while(i < len) {
+            char c = s.charAt(i);
+            if(Character.isLetterOrDigit(c)) {
+                int tmp = i;
+                while(tmp < len && Character.isLetterOrDigit(s.charAt(tmp))) {
+                    tmp++;
                 }
+                stk.push(s.substring(i, tmp));
+                i = tmp;
+                continue;
+            }else if(c == ']') {
+                StringBuilder sb = new StringBuilder();
+                while(!Character.isDigit(stk.peek().charAt(0))) {
+                    tmpStk.push(stk.pop());
+                }
+                while(!tmpStk.isEmpty()) {
+                    sb.append(tmpStk.pop());
+                }
+                String str = sb.toString();
+                int cnt = Integer.parseInt(stk.pop());
+                for(int k=1; k<cnt; k++) {
+                    sb.append(str);
+                }
+                stk.push(sb.toString());
             }
+            i++;
         }
-        return param.substring(left, right+1);
+        StringBuilder sb = new StringBuilder();
+        while(!stk.isEmpty()) {
+            sb.append(stk.removeLast());
+        }
+        return sb.toString();
+    }
+
+    public static void main(String[] args) {
+
+        int x = (-3) % 10;
+        System.out.println(x);
     }
 }
