@@ -1,4 +1,4 @@
-package com.example.intesting.xiaohongshubishi;
+package com.example.intesting.xiaohongshu;
 
 import java.util.*;
 
@@ -52,6 +52,17 @@ public class Main {
                 num /= 2;
             }
         }
+        /**
+         * 对于一个数 num，如果它有一个大于 Math.sqrt(num) 的质因数 p，那么必然存在一个小于 Math.sqrt(num) 的质因数 q，使得 num = p * q。
+         *
+         * 假设 num = 15，Math.sqrt(15) ≈ 3.87。
+         * 15 的质因数有 3 和 5，其中 5 > 3.87，但 3 < 3.87，且 15 = 3 * 5。
+         * 因此，只要我们在 i ≤ Math.sqrt(num) 的范围内找到了所有质因数，剩下的大于 Math.sqrt(num) 的质因数（如果存在）可以通过 num 除以已找到的质因数得到。
+         *
+         * 先处理偶数（质因数 2），因为 2 是唯一的偶质数。
+         * 然后从 i = 3 开始，遍历到 Math.sqrt(num)，步长为 2（只检查奇数，因为除了 2 外，质数都是奇数）。
+         * 若 i 是 num 的因数，则 i 是质因数（因为之前的步骤已经处理了更小的因数，所以此时 i 无法再被更小的质数整除，必然是质数）。
+         */
         for (int i = 3; i <= Math.sqrt(num); i += 2) {
             if (num % i == 0) {
                 primes.add(i);

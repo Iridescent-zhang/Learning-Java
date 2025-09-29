@@ -17,10 +17,10 @@ package com.example.test;
 import java.util.*;
 
 
-public class Main {
+import java.util.*;
+
+class Main {
     public static void main(String[] args) {
-        // 最长不相邻的子序列，且最大公约数要大于1
 
     }
-
 }
